@@ -2832,7 +2832,11 @@ local specialModList = {
 	["([%+%-]%d+)%% to quality of all skills"] = function(num) return { mod("GemProperty", "LIST", { keyword = "grants_active_skill", key = "quality", value = num }) } end,
 	["([%+%-]%d+)%%? to (%a+) of all ?([%a%- ]*) skills"] = function(num, _, property, type)
 		if type == "" then type = "all" end
-		return { mod("GemProperty", "LIST", { keyword = type, key = property, value = num }) }
+		local wordList = {}
+		for tag in type:gmatch("%w+") do
+			table.insert(wordList, tag)
+		end
+		return { mod("GemProperty", "LIST", { keywordList = wordList, key = property, value = num }) }
 	end,
 	["grants level (%d+) snipe skill"] = function(num) return {
 		mod("ExtraSkill", "LIST", { skillId = "Snipe", level = num }),
